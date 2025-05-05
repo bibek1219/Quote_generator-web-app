@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quote Generator</title>
+  <style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #222;
+      --text-light: #333;
+      --text-dark: #eee;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .quote-box {
+      max-width: 600px;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    button, select, input[type=range] {
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .font-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quote-box">
+    <p id="quote" style="font-size: 1.5rem;"></p>
+  </div>
+
+  <div class="controls">
+    <select id="categorySelect">
+      <option value="inspiration">Inspiration</option>
+      <option value="science">Science</option>
+    </select>
+
+    <button onclick="prevQuote()">Previous</button>
+    <button onclick="nextQuote()">Next</button>
+    <button onclick="randomQuote()">Random</button>
+
+    <label>
+      Dark Mode
+      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" />
+    </label>
+
+    <div class="font-controls">
+      <button onclick="changeFontSize(-0.1)">A-</button>
+      <button onclick="changeFontSize(0.1)">A+</button>
+    </div>
+  </div>
+
+  <script>
+    const quotes = {
+      inspiration: [
+        "Believe in yourself.",
+        "Stay hungry, stay foolish.",
+        "Success is not final, failure is not fatal."
+      ],
+      science: [
+        "Science is magic that works.",
+        "The important thing is to never stop questioning.",
+        "Somewhere, something incredible is waiting to be known."
+      ]
+    };
+
+    let currentCategory = "inspiration";
+    let currentIndex = 0;
+    let fontSize = 1.5;
+
+    const quoteElem = document.getElementById("quote");
+    const categorySelect = document.getElementById("categorySelect");
+
+    function showQuote() {
+      quoteElem.innerText = quotes[currentCategory][currentIndex];
+    }
+
+    function nextQuote() {
+      currentIndex = (currentIndex + 1) % quotes[currentCategory].length;
+      showQuote();
+    }
+
+    function prevQuote() {
+      currentIndex = (currentIndex - 1 + quotes[currentCategory].length) % quotes[currentCategory].length;
+      showQuote();
+    }
+
+    function randomQuote() {
+      currentIndex = Math.floor(Math.random() * quotes[currentCategory].length);
+      showQuote();
+    }
+
+    categorySelect.addEventListener("change", function () {
+      currentCategory = this.value;
+      currentIndex = 0;
+      showQuote();
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function changeFontSize(delta) {
+      fontSize += delta;
+      quoteElem.style.fontSize = fontSize + "rem";
+    }
+
+    // Initialize
+    showQuote();
+  </script>
+</body>
+</html>
